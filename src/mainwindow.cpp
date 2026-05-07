@@ -12,13 +12,14 @@ void MyWindow::drawBoarder(QPainter& painter) {
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(QColor(234, 130, 22).rgb());
     painter.setBrush(Qt::NoBrush);
-    painter.drawRoundedRect(this->rect(), 10, 10);
+    auto rect = QRectF(this->rect());
+    painter.drawRoundedRect(rect.adjusted(0.8, 0.8, -0.8, -0.8), xr, yr);
 }
 
 void MyWindow::resizeEvent(QResizeEvent* event) {
     QWidget::resizeEvent(event);
     auto rect = QPainterPath();
-    rect.addRoundedRect(this->rect(), 10, 10);
+    rect.addRoundedRect(this->rect(), xr, yr);
     setMask(rect.toFillPolygon().toPolygon());
 }
 
