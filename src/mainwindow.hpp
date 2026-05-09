@@ -12,6 +12,7 @@ public:
     ~MyWindow();
 
 private:
+    // 修改圆角弧度
     qreal xr { 12.5 }, yr { 12.5 };
     bool m_isDraging { false };
     QPoint last, latest, offset;

@@ -7,12 +7,14 @@ MyWindow::MyWindow() noexcept {
     //  parameters:0.667,0.667
 }
 MyWindow::~MyWindow() { }
-
+// 修改边框
 void MyWindow::drawBoarder(QPainter& painter) {
     painter.setRenderHint(QPainter::Antialiasing);
+    // 修改颜色
     painter.setPen(QColor(234, 130, 22).rgb());
     painter.setBrush(Qt::NoBrush);
     auto rect = QRectF(this->rect());
+    // 修改边框绘制范围
     painter.drawRoundedRect(rect.adjusted(0.8, 0.8, -0.8, -0.8), xr, yr);
 }
 
