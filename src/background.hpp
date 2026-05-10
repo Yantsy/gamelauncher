@@ -1,7 +1,10 @@
+
 #include <QAudioOutput>
 #include <QMediaPlayer>
 #include <QVideoWidget>
 #include <QWidget>
+#include <iostream>
+#include <vector>
 
 class Background : public QWidget {
 public:
@@ -13,7 +16,8 @@ public slots:
     void play();
 
 private:
-    QString getFileType(QUrl& source);
+    std::string getFileType(QUrl& source);
+    std::string pformat { "png,jpg,webp,jpeg" }, mformat { "mkv,mp4,webm" };
     void setPicture(QUrl& source);
     void setMovie(QUrl& source);
 

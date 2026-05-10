@@ -1,5 +1,7 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
   <qresource prefix="/">
+  <file>resources/examplepicture.webp</file>
+  <file>resources/examplevideo.webm</file>
   </qresource>
 </RCC>
