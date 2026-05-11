@@ -17,8 +17,8 @@ signals:
 private:
     std::string file;
     Clock audioClk, videoClk, exClk;
-    std::chrono::steady_clock::time_point start, laststart;
-    std::chrono::steady_clock::time_point update;
+    // std::chrono::steady_clock::time_point start, laststart;
+    // std::chrono::steady_clock::time_point update;
     PlayerStatePtr is = std::make_shared<PlayerState>();
     int count { 0 };
     bool jump { false };
@@ -27,35 +27,6 @@ private:
     ChunkQueue chunks;
     MyResampler myResampler;
     // tool functions
-    auto outputInfo(MediaInfo& mediaInfo) {
-        if (mediaInfo.videoInfo.vsIndex >= 0) {
-            std::cout << "File Path: " << mediaInfo.filePath << "\n"
-                      << "Stream [" << mediaInfo.videoInfo.vsIndex << "] Video\n"
-                      << "____resolution: " << mediaInfo.videoInfo.resolution[0] << "x"
-                      << mediaInfo.videoInfo.resolution[1] << "\n"
-                      << "____duration: " << mediaInfo.videoInfo.vduration << "s\n"
-                      << "____decoder: " << mediaInfo.videoInfo.vdecoderName << "\n"
-                      << "____pixel_format: " << mediaInfo.videoInfo.pxFmtName
-                      << "(depth:" << mediaInfo.videoInfo.pxFmtDpth << ")\n"
-                      << std::flush;
-        }
-        if (mediaInfo.audioInfo.asIndex >= 0) {
-            std::cout << "Stream [" << mediaInfo.audioInfo.asIndex << "] Audio\n"
-                      << "____samplerate: " << (float)mediaInfo.audioInfo.splRate / 1000 << "kHz\n"
-                      << "____duration: " << mediaInfo.audioInfo.aduration << "s\n"
-                      << "____decoder: " << mediaInfo.audioInfo.adecoderName << "\n"
-                      << "____channel_layout: "
-                      << (mediaInfo.audioInfo.channelLayoutName[0] != '\0'
-                                 ? mediaInfo.audioInfo.channelLayoutName
-                                 : std::to_string(mediaInfo.audioInfo.channels).c_str())
-                      << "\n"
-                      << "____sample_format: " << mediaInfo.audioInfo.splFmtName
-                      << "(depth:" << mediaInfo.audioInfo.splDepth * 8 << ")\n"
-                      << std::flush;
-        }
-
-        std::cout << " " << std::endl;
-    };
 
     auto clear(PlayerStatePtr is) {
         std::queue<AudioChunk> empty;
@@ -164,7 +135,6 @@ private:
         auto packet = av_packet_alloc();
         is->packet.reset(packet);
         std::cout << "Contexts allocated\n";
-        outputInfo(is->mediaInfo);
         emit sendAudioInfo(is);
         emit sendVideoInfo(is);
     }
@@ -217,13 +187,6 @@ private:
             }
             // av_frame_unref(myFrm);
             if (!is->topause) emit frameReady(frame);
-            std::cout << std::format("frame{},realtime:{}h{}m{}s,windowtime:{}h{}m{}s\n", is->frm,
-                is->videoClock.time(is->videoClock.rclk, 0),
-                is->videoClock.time(is->videoClock.rclk, 1),
-                is->videoClock.time(is->videoClock.rclk, 2),
-                is->videoClock.time(is->videoClock.wclk, 0),
-                is->videoClock.time(is->videoClock.wclk, 1),
-                is->videoClock.time(is->videoClock.wclk, 2));
         }
     };
     auto decodeAudio(PlayerStatePtr is) {
@@ -297,8 +260,16 @@ private:
             int ret = av_read_frame(is->formatCtx.get(), packets);
 
             if (ret == AVERROR_EOF) {
-                is->quit();
-                break;
+                if (is->loopOn) {
+                    is->estAudioPTS = 0;
+                    is->estVideoPTS = 0;
+                    // is->videoClock.reset();
+                    //  clear(is);
+                    seekFrame(is);
+                } else {
+                    is->quit();
+                    break;
+                }
             };
             // if (is->topause) return;
             if (packets->stream_index == is->mediaInfo.audioInfo.asIndex
@@ -344,5 +315,6 @@ public slots:
 public:
     DemuxerPlusDecoder() { };
     ~DemuxerPlusDecoder() { };
-    void open(std::string filePath) { file = std::move(filePath); };
+    void open(const std::string_view filePath) { file = std::move(filePath); };
+    void loopOn() { is->loopOn = true; }
 };

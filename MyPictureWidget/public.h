@@ -168,6 +168,11 @@ struct Clock {
         time[2] = ms - time[1] * 60;
         return time[i];
     }
+    auto reset() {
+        latest      = rt::now();
+        start       = rt::now();
+        masterclock = 0.0;
+    }
 };
 struct PlayerState {
     // vars changed by different files
@@ -181,15 +186,10 @@ struct PlayerState {
     FrmPtr decAudioFrm { nullptr };
     FrmPtr myAudioFrm { nullptr };
     std::array<uint8_t*, 1> audioBuffer { }; // container of the pointer to audio buffer
-    int audioBufferSize { 0 };
-    int audioBufferRemains { 0 };
     int bytesPerSample { 0 }, bytesPerSecond { 0 };
     size_t readPos { 0 };
     FrmPtr decVideoFrm { nullptr };
     FrmPtr myVideoFrm { nullptr };
-    std::array<uint8_t*, 3> videoBufferHead { }; // container of the pointer to video buffer
-    std::array<int, 3> videoBufferSize { };
-    int videoBufferRemains { 0 };
     Clock videoClock;
     Masterclock mc { OC };
     std::queue<AudioChunk> chunks;
@@ -209,7 +209,7 @@ struct PlayerState {
     bool toquit { false };
     auto flusha() { aflush = true; };
     auto flushv() { vflush = true; };
-
+    bool loopOn { false };
     auto pause() { topause = true; };
     auto play() { topause = false; };
     auto quit() { toquit = true; }

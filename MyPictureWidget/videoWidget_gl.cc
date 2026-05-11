@@ -252,7 +252,7 @@ QMatrix4x4 MyGLWidget::transformMatrix(
     auto scaleX      = 0.0f;
     auto scaleY      = 0.0f;
 
-    if (imageRatio > windowRatio) {
+    if (imageRatio < windowRatio) {
         scaleX = 1.0f;
         scaleY = windowRatio / imageRatio;
     } else {
