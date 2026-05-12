@@ -1,10 +1,17 @@
 #pragma once
-#include "../src/background.hpp"
+#include "../MyPictureWidget/audioWidget_sdl2.h"
+#include "../MyPictureWidget/demuxer.h"
+#include "../MyPictureWidget/videoWidget_gl.h"
+#include <QAudioOutput>
 #include <QEvent>
 #include <QMainWindow>
+#include <QMediaPlayer>
 #include <QMouseEvent>
+#include <QObject>
 #include <QPainter>
 #include <QPainterPath>
+#include <QThread>
+#include <QVBoxLayout>
 #include <QWidget>
 class MyWindow : public QWidget {
     Q_OBJECT
@@ -25,7 +32,7 @@ private:
     QPoint last, latest, offset;
 
     void drawBoarder(QPainter& painter);
-    void addContents(const std::string_view source, int index);
+    void addContents(const std::string& source, int index);
 
 protected:
     void resizeEvent(QResizeEvent* event) override;

@@ -3,5 +3,6 @@
   <qresource prefix="/">
   <file>resources/examplepicture.webp</file>
   <file>resources/examplevideo.webm</file>
+  <file>resources/【京吹_秀久】她的睫毛.mp4</file>
   </qresource>
 </RCC>

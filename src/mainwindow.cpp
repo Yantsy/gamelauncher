@@ -7,12 +7,16 @@ MyWindow::MyWindow() noexcept {
     //  parameters:0.667,0.667
     this->setLayout(&mainLayout);
     demuxer = new DemuxerPlusDecoder();
-    // demuxer->loopOn();
+    demuxer->loopOn();
     thread = new QThread(this);
     mainLayout.setContentsMargins(0, 0, 0, 0);
     demuxer->moveToThread(thread);
     QObject::connect(thread, &QThread::started, demuxer, &DemuxerPlusDecoder::processStart);
-    addContents("/home/yantsy/workspace/mine/mihoyolauncher/resources/examplevideo.webm", 1);
+    std::string contents = "/home/yantsy/workspace/mine/mihoyolauncher/resources/"
+                           "【京吹_秀久】她的睫毛.mp4";
+    addContents(contents, 1);
+    /// "home/yantsy/Videos/tests/【京吹_秀久】她的睫毛.mp4"
+    //"/home/yantsy/workspace/mine/mihoyolauncher/resources/examplevideo.webm"
 }
 MyWindow::~MyWindow() {
     demuxer->quit();
@@ -72,4 +76,4 @@ void MyWindow::setAudioOutput(MyAudioWidget* audioWidget) {
 }
 
 void MyWindow::start() { thread->start(); }
-void MyWindow::addContents(const std::string_view source, int index) { demuxer->open(source); }
+void MyWindow::addContents(const std::string& source, int index) { demuxer->open(source); }

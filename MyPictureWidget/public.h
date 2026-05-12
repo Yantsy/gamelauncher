@@ -197,9 +197,9 @@ struct PlayerState {
     FrameQueue frameQueue;
     int64_t frm { 0 };
     int64_t estAudioPTS { 0 };
-    int64_t audioPTS { 0 };
+
     int64_t estVideoPTS { 0 };
-    int64_t videoPTS { 0 };
+
     bool progressChanged { false };
     bool apc { false };
     bool isplay { true };

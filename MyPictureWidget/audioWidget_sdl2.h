@@ -98,7 +98,10 @@ public:
         std::cout << "Init SDL_Audio success\n";
     };
 
-    ~MyAudioWidget() { SDL_Quit(); };
+    ~MyAudioWidget() {
+        // quit();
+        SDL_Quit();
+    };
     void pause() { SDL_PauseAudioDevice(audioDevice, 1); }
     void play() { SDL_PauseAudioDevice(audioDevice, 0); }
     void quit() {

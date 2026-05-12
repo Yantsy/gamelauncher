@@ -37,8 +37,8 @@ private:
     auto seekFrame(PlayerStatePtr is) {
         av_seek_frame(is->formatCtx.get(), is->mediaInfo.videoInfo.vsIndex, is->estVideoPTS,
             AVSEEK_FLAG_BACKWARD);
-        avcodec_flush_buffers(is->audioDecCtx.get());
-        avcodec_flush_buffers(is->videoDecCtx.get());
+        if (is->audioDecCtx.get() != nullptr) avcodec_flush_buffers(is->audioDecCtx.get());
+        if (is->videoDecCtx.get() != nullptr) avcodec_flush_buffers(is->videoDecCtx.get());
     }
 
     // core functions
@@ -251,7 +251,6 @@ private:
         auto packets { is->packet.get() };
         while (is->update() == 0) {
             if (is->progressChanged) {
-
                 is->videoClock.skip = true;
                 is->apc             = true;
                 is->progressChanged = false;
@@ -263,9 +262,9 @@ private:
                 if (is->loopOn) {
                     is->estAudioPTS = 0;
                     is->estVideoPTS = 0;
-                    // is->videoClock.reset();
-                    //  clear(is);
+                    is->videoClock.reset();
                     seekFrame(is);
+                    continue;
                 } else {
                     is->quit();
                     break;
@@ -281,13 +280,13 @@ private:
             }
         }
         av_packet_unref(packets);
+        emit finished();
     }
 
 public slots:
     void processStart() {
         demux(file);
         decode(is);
-        emit finished();
     }
     void progressChange(double newProgress) {
         clear(is);
@@ -315,6 +314,6 @@ public slots:
 public:
     DemuxerPlusDecoder() { };
     ~DemuxerPlusDecoder() { };
-    void open(const std::string_view filePath) { file = std::move(filePath); };
+    void open(const std::string& filePath) { file = filePath; };
     void loopOn() { is->loopOn = true; }
 };
