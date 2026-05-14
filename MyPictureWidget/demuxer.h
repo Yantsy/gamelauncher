@@ -168,11 +168,13 @@ private:
             ++is->frm;
             is->videoClock.update = decodedFrm->pts;
             if (is->videoClock.skip) {
-                is->videoClock.base        = is->videoClock.update;
-                is->videoClock.masterclock = 0.0;
-                is->videoClock.adjust      = 0.0;
-                is->videoClock.init        = -1;
-                is->videoClock.skip        = false;
+                is->videoClock.base = is->videoClock.update;
+                guard adjustGuard(is->adjustMutex);
+                { is->videoClock.adjust = 0.0; }
+                guard mastercGuard(is->mastercMutex);
+                { is->videoClock.masterclock = 0.0; }
+                is->videoClock.init = -1;
+                is->videoClock.skip = false;
             }
             // av_frame_ref(myFrm, decodedFrm);
             auto frame = std::make_shared<VideoFrame>(decodedFrm);
@@ -242,7 +244,8 @@ private:
                 chunk.pcm.assign(myFrm->data[0], myFrm->data[0] + outBytes);
             }
             chunk.audioBufferSize = outBytes;
-            is->chunks.push(std::move(chunk));
+            guard audioGuard(is->audioMutex);
+            { is->chunks.push(std::move(chunk)); }
             av_frame_unref(myFrm);
             /*
             pause for the push mode

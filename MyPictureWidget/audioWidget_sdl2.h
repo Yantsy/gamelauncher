@@ -33,7 +33,7 @@ private:
 
         while (remaining > 0 && is != nullptr) {
             if (is->chunks.empty()) break;
-
+            guard audioGuard(is->audioMutex);
             auto& src           = is->chunks.front().pcm;
             int audioBufferSize = is->chunks.front().audioBufferSize;
             // the most you can get from src
@@ -46,7 +46,8 @@ private:
             int tocopy = std::min(available, remaining);
             SDL_memcpy(dst, src.data() + is->readPos, tocopy);
             is->readPos += tocopy;
-            is->videoClock.adjust += tocopy;
+            guard adjustGuard(is->adjustMutex);
+            { is->videoClock.adjust += tocopy; }
             dst += tocopy;
             remaining -= tocopy;
             if (is->readPos >= audioBufferSize) {
@@ -54,7 +55,8 @@ private:
                 is->readPos = 0;
             };
         };
-        is->videoClock.masterclock = is->videoClock.adjust / is->bytesPerSecond;
+        guard mastercGuard(is->mastercMutex);
+        { is->videoClock.masterclock = is->videoClock.adjust / is->bytesPerSecond; }
     };
     //
     auto initialize(PlayerStatePtr is) {
@@ -99,7 +101,7 @@ public:
     };
 
     ~MyAudioWidget() {
-        // quit();
+        if (audioDevice != 0) quit();
         SDL_Quit();
     };
     void pause() { SDL_PauseAudioDevice(audioDevice, 1); }

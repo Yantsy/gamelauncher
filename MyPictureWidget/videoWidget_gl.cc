@@ -176,15 +176,15 @@ void MyGLWidget::initializeGL() {
     m_vao0->create();
     m_vao0->bind();
 
-    auto m_vbo0 = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-    m_vbo0->create();
-    m_vbo0->bind();
-    m_vbo0->allocate(m_vertices, sizeof(m_vertices));
+    auto m_vbo0 = std::make_unique<QOpenGLBuffer>(QOpenGLBuffer::VertexBuffer);
+    m_vbo0.get()->create();
+    m_vbo0.get()->bind();
+    m_vbo0.get()->allocate(m_vertices, sizeof(m_vertices));
 
-    auto m_ebo0 = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
-    m_ebo0->create();
-    m_ebo0->bind();
-    m_ebo0->allocate(m_indices, sizeof(m_indices));
+    auto m_ebo0 = std::make_unique<QOpenGLBuffer>(QOpenGLBuffer::IndexBuffer);
+    m_ebo0.get()->create();
+    m_ebo0.get()->bind();
+    m_ebo0.get()->allocate(m_indices, sizeof(m_indices));
 
     const auto m_vertexShader = new QOpenGLShader(QOpenGLShader::Vertex, this);
     m_vertexShader->compileSourceCode(m_vertexShaderSource);

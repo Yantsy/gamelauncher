@@ -3,6 +3,7 @@
 #include <condition_variable>
 #include <cstdint>
 #include <memory>
+#include <mutex>
 #include <queue>
 #include <ranges>
 extern "C" {
@@ -58,6 +59,7 @@ using SwrCtxPtr = std::unique_ptr<SwrContext, CtxFree<SwrContext>>;
 using FrmPtr    = std::unique_ptr<AVFrame, CtxFree<AVFrame>>;
 using PktPtr    = std::unique_ptr<AVPacket, CtxFree<AVPacket>>;
 using rt        = std::chrono::steady_clock;
+using guard     = std::lock_guard<std::mutex>;
 
 struct AudioInfo {
     int asIndex { -1 };
@@ -192,6 +194,7 @@ struct PlayerState {
     FrmPtr myVideoFrm { nullptr };
     Clock videoClock;
     Masterclock mc { OC };
+    std::mutex audioMutex, adjustMutex, mastercMutex;
     std::queue<AudioChunk> chunks;
     ChunkQueue chunkQueue;
     FrameQueue frameQueue;
