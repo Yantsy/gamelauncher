@@ -75,10 +75,6 @@ void MyGLWidget::renderWithOpenGL(uint8_t* Y, uint8_t* U, uint8_t* V, int& w, in
     repaint();
 }
 
-bool MyGLWidget::needupdate() {
-    bool update;
-    return update;
-}
 float MyGLWidget::adjustC(int orig, int inbuffer) {
     float a = (1 << orig) - 1;
     float b = (1 << inbuffer) - 1;

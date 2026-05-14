@@ -64,7 +64,6 @@ private:
     float adjustC(int orig, int inbuffer);
     int depth { 0 };
     double timeBase { 0.0 };
-    bool needupdate();
     void updateTexture(
         QOpenGLTexture*& texture, float w, float h, QOpenGLTexture::TextureFormat format);
     void sendTexture(QOpenGLTexture* texture);

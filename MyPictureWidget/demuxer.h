@@ -16,9 +16,6 @@ signals:
 
 private:
     std::string file;
-    Clock audioClk, videoClk, exClk;
-    // std::chrono::steady_clock::time_point start, laststart;
-    // std::chrono::steady_clock::time_point update;
     PlayerStatePtr is = std::make_shared<PlayerState>();
     int count { 0 };
     bool jump { false };
@@ -45,12 +42,21 @@ private:
     auto demux(std::string& filePath) {
         auto pFormatCtx = avformat_alloc_context();
         auto file       = filePath.c_str();
-        if (avformat_open_input(&pFormatCtx, file, nullptr, nullptr) != 0) {
-            std::cerr << "Can't open file\n" << std::flush;
+        try {
+            if (avformat_open_input(&pFormatCtx, file, nullptr, nullptr) < 0) {
+                throw std::runtime_error("Can't open file\n");
+            }
+        } catch (const std::exception& error) {
+            std::cerr << error.what() << "\n";
         }
-        if (avformat_find_stream_info(pFormatCtx, nullptr) != 0) {
-            std::cerr << "Can't find video stream info\n" << std::flush;
+        try {
+            if (avformat_find_stream_info(pFormatCtx, nullptr) < 0) {
+                throw std::runtime_error("Can't find video stream info\n");
+            }
+        } catch (const std::exception& error) {
+            std::cerr << error.what() << "\n";
         }
+
         auto asi = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
         auto vsi = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
         auto ssi = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_SUBTITLE, -1, -1, NULL, 0);

@@ -12,8 +12,7 @@ MyWindow::MyWindow() noexcept {
     mainLayout.setContentsMargins(0, 0, 0, 0);
     demuxer->moveToThread(thread);
     QObject::connect(thread, &QThread::started, demuxer, &DemuxerPlusDecoder::processStart);
-    std::string contents = "/home/yantsy/workspace/mine/mihoyolauncher/resources/"
-                           "【京吹_秀久】她的睫毛.mp4";
+    std::string contents = "/home/yantsy/workspace/mine/mihoyolauncher/resources/examplevideo.webm";
     addContents(contents, 1);
     /// "home/yantsy/Videos/tests/【京吹_秀久】她的睫毛.mp4"
     //"/home/yantsy/workspace/mine/mihoyolauncher/resources/examplevideo.webm"
