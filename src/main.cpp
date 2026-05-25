@@ -1,5 +1,5 @@
 #include "../MyPictureWidget/public.h"
-#include "../src/mainwindow.hpp"
+#include "../src/MediaContainer.hpp"
 #include <QApplication>
 #include <QThread>
 
@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
     qRegisterMetaType<std::shared_ptr<VideoFrame>>("std::shared_ptr<VideoFrame>");
     qRegisterMetaType<std::shared_ptr<AudioChunk>>("std::shared_ptr<AudioChunk>");
     qRegisterMetaType<PlayerStatePtr>("PlayerStatePtr");
-    MyWindow w;
+    MediaContainer w;
     w.show();
     auto glWidget    = new MyGLWidget();
     auto audioWidget = new MyAudioWidget();

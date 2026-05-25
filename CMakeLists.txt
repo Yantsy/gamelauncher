@@ -15,8 +15,9 @@ qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(${PROJECT_NAME}
 src/main.cpp
-src/mainwindow.cpp
-src/mainwindow.hpp
+src/MediaContainer.cpp
+src/MediaContainer.hpp
+src/MetaWidget.hpp
 MyPictureWidget/demuxer.h
 MyPictureWidget/public.h
 MyPictureWidget/resampler.h
