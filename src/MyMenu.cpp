@@ -7,3 +7,5 @@ MyMenu::MyMenu(QWidget* parent) {
     mainLayout.addWidget(optionList);
     mainLayout.addWidget(stacks);
 }
+
+MyMenu::~MyMenu() { }

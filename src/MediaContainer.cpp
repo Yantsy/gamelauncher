@@ -7,7 +7,7 @@ MediaContainer::MediaContainer() noexcept {
     demuxer = new DemuxerPlusDecoder();
     demuxer->loopOn();
     thread = new QThread(this);
-    mainLayout.setContentsMargins(1, 1, 0, 0);
+    mainLayout.setContentsMargins(3, 3, 3, 3);
     demuxer->moveToThread(thread);
     QObject::connect(thread, &QThread::started, demuxer, &DemuxerPlusDecoder::processStart);
     std::string contents = "/home/yantsy/workspace/mine/mihoyolauncher/resources/examplevideo.webm";
@@ -28,6 +28,7 @@ MediaContainer::~MediaContainer() {
 void MediaContainer::setPictureOutput(MyGLWidget* glWidget) {
     QObject::connect(demuxer, &DemuxerPlusDecoder::sendVideoInfo, glWidget, &MyGLWidget::getInfo);
     QObject::connect(demuxer, &DemuxerPlusDecoder::frameReady, glWidget, &MyGLWidget::frameIn);
+    glWidget->lower();
 }
 void MediaContainer::setAudioOutput(MyAudioWidget* audioWidget) {
     QObject::connect(

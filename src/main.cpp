@@ -1,6 +1,8 @@
 #include "../MyPictureWidget/public.h"
 #include "../src/MediaContainer.hpp"
+#include "MyMenu.hpp"
 #include <QApplication>
+#include <QPushButton>
 #include <QThread>
 
 #include <iostream>

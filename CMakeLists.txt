@@ -18,6 +18,8 @@ src/main.cpp
 src/MediaContainer.cpp
 src/MediaContainer.hpp
 src/MetaWidget.hpp
+src/MyMenu.hpp
+src/MyMenu.cpp
 MyPictureWidget/demuxer.h
 MyPictureWidget/public.h
 MyPictureWidget/resampler.h
