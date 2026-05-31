@@ -22,16 +22,25 @@ public:
 
 private:
     qreal xr { 10 }, yr { 10 };
-    bool m_isDraging { false };
+    bool m_isDraging { false }, m_drawBorder { false }, m_dragAble { false };
     QPoint last, latest, offset;
     QColor borderColor { QColor(234, 130, 22).rgb() };
     qreal border_left { 0.8 }, border_top { 0.8 }, border_right { -0.8 }, border_bottom { -0.8 };
 
 protected:
+    // 控制圆角弧度
     void setRadius(qreal xr = 10, qreal yr = 10) {
         this->xr = xr;
         this->yr = yr;
     }
+    // 取消绘制背景，使窗口透明
+    void noBackground() { setAutoFillBackground(false); }
+    // 和noBackground()效果类似，但建议对独立窗口使用这个
+    void noSightBlock() { setAttribute(Qt::WA_TranslucentBackground); }
+    // 开启拖拽；
+    void dragAble() { m_dragAble = true; }
+    // 设置是否绘制边缘色；
+    void drawBoarder(bool be) { m_drawBorder = be; };
     void setBorderColor(int r, int g, int b) { borderColor = QColor(r, g, b).rgb(); }
     void setBoardAdjust(qreal left, qreal top, qreal right, qreal bottom) {
         border_left   = left;
@@ -58,22 +67,24 @@ protected:
     void mousePressEvent(QMouseEvent* press) {
         QWidget::mousePressEvent(press);
         m_isDraging = true;
-        if (press->buttons() == Qt::LeftButton) {
+        if (press->buttons() == Qt::LeftButton && m_dragAble) {
             offset = press->globalPosition().toPoint() - frameGeometry().topLeft();
         }
     }
 
     void mouseMoveEvent(QMouseEvent* move) {
         QWidget::mouseMoveEvent(move);
-        if (m_isDraging && (move->buttons() & Qt::LeftButton)) {
+        if (m_isDraging && (move->buttons() & Qt::LeftButton) && m_dragAble) {
             this->move(move->globalPosition().toPoint() - offset);
         }
     }
-    void mouseReleaseEvent(QMouseEvent* release) { m_isDraging = false; }
+    void mouseReleaseEvent(QMouseEvent* release) {
+        if (m_dragAble) m_isDraging = false;
+    }
 
     void paintEvent(QPaintEvent* paint) {
         QWidget::paintEvent(paint);
         QPainter painter(this);
-        drawBoarder(painter);
+        if (m_drawBorder) drawBoarder(painter);
     }
 };

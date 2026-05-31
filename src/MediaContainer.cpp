@@ -1,13 +1,14 @@
 #include "MediaContainer.hpp"
 MediaContainer::MediaContainer() noexcept {
     setFixedSize(1320, 720);
+    dragAble();
     // setAttribute(Qt::WA_TranslucentBackground);
     //  parameters:0.667,0.667
     this->setLayout(&mainLayout);
     demuxer = new DemuxerPlusDecoder();
     demuxer->loopOn();
     thread = new QThread(this);
-    mainLayout.setContentsMargins(3, 3, 3, 3);
+    mainLayout.setContentsMargins(0, 0, 0, 0);
     demuxer->moveToThread(thread);
     QObject::connect(thread, &QThread::started, demuxer, &DemuxerPlusDecoder::processStart);
     std::string contents = "/home/yantsy/workspace/mine/mihoyolauncher/resources/examplevideo.webm";
@@ -23,7 +24,6 @@ MediaContainer::~MediaContainer() {
         thread->wait();
     }
 }
-// 修改边框
 
 void MediaContainer::setPictureOutput(MyGLWidget* glWidget) {
     QObject::connect(demuxer, &DemuxerPlusDecoder::sendVideoInfo, glWidget, &MyGLWidget::getInfo);

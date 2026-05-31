@@ -1,5 +1,6 @@
 #include "../MyPictureWidget/public.h"
-#include "../src/MediaContainer.hpp"
+#include "MediaContainer.hpp"
+#include "MyBorder.hpp"
 #include "MyMenu.hpp"
 #include <QApplication>
 #include <QPushButton>
@@ -16,6 +17,7 @@ int main(int argc, char* argv[]) {
     qRegisterMetaType<std::shared_ptr<AudioChunk>>("std::shared_ptr<AudioChunk>");
     qRegisterMetaType<PlayerStatePtr>("PlayerStatePtr");
     MediaContainer w;
+    MyBorder m(&w);
     w.show();
     auto glWidget    = new MyGLWidget();
     auto audioWidget = new MyAudioWidget();
