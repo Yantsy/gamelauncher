@@ -19,9 +19,9 @@ public:
         setContentsMargins(0, 0, 0, 0);
     }
     ~MetaWidget() { }
+    qreal xr { 10 }, yr { 10 };
 
 private:
-    qreal xr { 10 }, yr { 10 };
     bool m_isDraging { false }, m_drawBorder { false }, m_dragAble { false };
     QPoint last, latest, offset;
     QColor borderColor { QColor(234, 130, 22).rgb() };

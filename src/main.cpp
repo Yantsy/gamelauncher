@@ -27,3 +27,5 @@ int main(int argc, char* argv[]) {
     w.start();
     return a.exec();
 }
+
+// 需解决myBorder的弧度设置是否跟随其父组件的问题

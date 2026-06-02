@@ -4,13 +4,14 @@
 
 class MyBorder : public MetaWidget {
 public:
-    MyBorder(QWidget* parent = nullptr) {
+    MyBorder(MetaWidget* parent = nullptr) {
         if (parent != nullptr) setParent(parent);
         drawBoarder(true);
         noSightBlock();
         raise();
         move(0, 0);
         resize(parent->size());
+        setRadius(parent->xr, parent->yr);
     }
     ~MyBorder() { }
 };

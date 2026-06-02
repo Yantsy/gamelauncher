@@ -1,8 +1,8 @@
 #include "MediaContainer.hpp"
 MediaContainer::MediaContainer() noexcept {
     setFixedSize(1320, 720);
+    setRadius(15, 15);
     dragAble();
-    // setAttribute(Qt::WA_TranslucentBackground);
     //  parameters:0.667,0.667
     this->setLayout(&mainLayout);
     demuxer = new DemuxerPlusDecoder();
